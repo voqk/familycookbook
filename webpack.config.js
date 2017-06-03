@@ -31,7 +31,9 @@ module.exports = {
             { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
 
             // Import css files
-            { test: /\.css$/, use: ["style-loader", "css-loader"]}
+            { test: /\.css$/, use: ["style-loader", "css-loader"]},
+            { test: /\.(woff|woff2)$/, loader: "url-loader?limit:10000" },
+            { test: /\.(eot|ttf|svg)$/, loader: "file-loader" }
         ]
     },
 
