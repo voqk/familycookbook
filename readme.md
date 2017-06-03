@@ -14,7 +14,7 @@ At the end of every article run the following steps to get the code as it is
 2. Checkout the commit given at the end of the article. For example: to get the source after the first [post](https://bedlamandclash.com/2017/05/18/building-a-web-app-the-family-cookbook/).
 
     ```bash
-    git checkout 66cc974
+    git checkout 66cc974 .
     ```
 
 2. Install dependencies
