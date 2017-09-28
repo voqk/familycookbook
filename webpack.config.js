@@ -1,11 +1,13 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
     entry: "./src/index.tsx",
     output: {
-        filename: "bundle.js",
-        path: __dirname + "/dist"
+        filename: "[name].[chunkhash].js",
+        path: __dirname + "/dist",
+        publicPath: "/"
     },
 
     // Enable sourcemaps for debugging webpack's output.
@@ -37,7 +39,10 @@ module.exports = {
         ]
     },
 
-    plugins: [new HtmlWebpackPlugin({
-        template: './index.html'
-    })],
+    plugins: [
+        new CleanWebpackPlugin(['dist']),
+        new HtmlWebpackPlugin({
+            template: './index.html'
+        })
+    ],
 };

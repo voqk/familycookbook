@@ -2,8 +2,9 @@ import * as React from 'react';
 import {
     BrowserRouter as Router,
     Route,
-    Link
+    Redirect
 } from 'react-router-dom';
+import { Grid } from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/css/bootstrap-theme.min.css';
@@ -11,7 +12,7 @@ import 'bootstrap/dist/css/bootstrap-theme.min.css';
 import { NavigationBar } from './NavigationBar';
 import { Home } from './Home';
 import { About } from './About';
-import { Recipes } from './Recipes';
+import { RecipeRouter } from './recipes/RecipeRouter';
 
 export class App extends React.Component<undefined, undefined> {
     constructor() {
@@ -22,16 +23,17 @@ export class App extends React.Component<undefined, undefined> {
             <Router>
                 <div>
                     <NavigationBar 
-                        header={{name: "Family cookbook", to: "/"}}
+                        header={{name: "Family cookbook", to: "/recipes"}}
                         links={[
-                            {name: "About", to: "/about"},
                             {name: "Recipes", to: "/recipes"},
+                            {name: "About", to: "/about"},
                         ]} />
-                    <div className="container">
-                        <Route exact path="/" component={Home} />
+
+                    <Grid>
+                        <Route exact path="/"  render={() => <Redirect to="/recipes" />} />
                         <Route path="/about" component={About} />
-                        <Route path="/recipes" component={Recipes} />
-                    </div>
+                        <Route path="/recipes" component={RecipeRouter} />
+                    </Grid>
                 </div>
             </Router>
         );
