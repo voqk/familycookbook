@@ -2,7 +2,13 @@
 // read and write access to your database
 {
   "rules": {
-    ".read": true,
-    ".write": true
+    "recipeInfos": {
+      ".read": true,
+      ".write": "auth !== null"
+    },
+    "recipes": {
+      ".read": true,
+      ".write": "auth !== null"
+    }
   }
 }

@@ -13,7 +13,7 @@ import * as moment from 'moment';
 
 import { RecipePretty } from './RecipePretty';
 import { Recipe } from '../../Models';
-import repo from '../../Repo';
+import { repo } from '../../firebase/Repo';
 
 interface RecipeFormPageRouteProps {
     id: string

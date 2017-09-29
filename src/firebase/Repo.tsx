@@ -4,23 +4,16 @@ import {
     RecipeDto, 
     RecipeInfoDto,
     Recipe
-} from './Models';
+} from '../Models';
 
-import * as fb from 'firebase';
+import firebase from './firebase';
 
 
 class Repo {
     private firebase : firebase.app.App;
 
     constructor() {
-        const config = {
-            apiKey: "AIzaSyAr4ud3szMrvHDuAXGTZXB7KUVC8HuqmAY",
-            authDomain: "familycookbook-fc6f7",
-            databaseURL: "https://familycookbook-fc6f7.firebaseio.com/",
-            storageBucket: "gs://familycookbook-fc6f7.appspot.com"
-        };
-
-        this.firebase = fb.initializeApp(config);
+        this.firebase = firebase.app;
     }
 
     public getIndex() : firebase.Promise<{[id: string]: RecipeInfoDto}> {
@@ -74,5 +67,4 @@ class Repo {
     }
 }
 
-const repo = new Repo();
-export default repo;
+export const repo = new Repo();

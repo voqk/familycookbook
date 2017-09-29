@@ -12,6 +12,8 @@ import 'bootstrap/dist/css/bootstrap-theme.min.css';
 import { NavigationBar } from './NavigationBar';
 import { Home } from './Home';
 import { About } from './About';
+import { Login } from './Login';
+import { Join } from './Join';
 import { RecipeRouter } from './recipes/RecipeRouter';
 
 export class App extends React.Component<undefined, undefined> {
@@ -33,6 +35,8 @@ export class App extends React.Component<undefined, undefined> {
                         <Route exact path="/"  render={() => <Redirect to="/recipes" />} />
                         <Route path="/about" component={About} />
                         <Route path="/recipes" component={RecipeRouter} />
+                        <Route path="/login" component={Login} />
+                        <Route path="/join" component={Join} />
                     </Grid>
                 </div>
             </Router>

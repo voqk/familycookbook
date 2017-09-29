@@ -3,7 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import { RecipeList } from './RecipeList';
 import { RecipeInfoDto } from '../../Models';
-import repo from '../../Repo';
+import { repo } from '../../firebase/Repo';
 
 export class RecipeIndexPage extends React.Component<RouteComponentProps<undefined>, {[id: string]: RecipeInfoDto}> {
     constructor(props: RouteComponentProps<undefined>) {

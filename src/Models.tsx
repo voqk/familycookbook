@@ -1,10 +1,8 @@
 import * as moment from 'moment';
 
-// export interface IRecipe {
-//     name: string;
-//     body: string;
-//     lastEditTimeStamp: moment.Moment;
-// }
+export interface User {
+    id: string;
+}
 
 export class Recipe {
 

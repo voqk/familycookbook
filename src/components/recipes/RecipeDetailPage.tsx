@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Row, Col, Button} from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import repo from '../../Repo';
+import { repo } from '../../firebase/Repo';
 import { RecipeDto, RecipeInfoDto, Recipe } from '../../Models';
 import { RecipePretty } from './RecipePretty';
 

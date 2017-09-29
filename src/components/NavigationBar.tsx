@@ -35,6 +35,13 @@ export const NavigationBar = (props: NavigationBarProps) => {
                                                     </NavItem>
                                                   </LinkContainer>)}
                 </Nav>
+                <Nav pullRight>
+                    <LinkContainer key={1} to={"/login"}>
+                        <NavItem eventKey={1} href={"/login"}>
+                            Sign in
+                        </NavItem>
+                    </LinkContainer>
+                </Nav>
             </Navbar.Collapse>
         </Navbar>
     );
