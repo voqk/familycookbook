@@ -37,7 +37,7 @@ export class Join extends React.Component<RouteComponentProps<undefined>, JoinSt
         const credentials = {...this.state};
         auth.createUser(credentials.email, credentials.password)
         .then(user => {
-            console.log(user);
+            this.props.history.push("/recipes");
         })
         .catch(err => {
             console.log(err.message);  

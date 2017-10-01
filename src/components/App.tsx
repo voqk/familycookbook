@@ -16,15 +16,36 @@ import { Login } from './Login';
 import { Join } from './Join';
 import { RecipeRouter } from './recipes/RecipeRouter';
 
-export class App extends React.Component<undefined, undefined> {
+import * as firebase from 'firebase';
+
+interface AppState {
+    user: firebase.User;
+}
+
+export class App extends React.Component<undefined, AppState> {
     constructor() {
         super();
+
+        this.state = {
+            user: null
+        };
+
+        firebase.auth().onAuthStateChanged(user => {
+            this.setState({user: user});
+        });
     }
+
+    onSignOut() {
+        firebase.auth().signOut();
+    }
+
     render() {
         return(
             <Router>
                 <div>
                     <NavigationBar 
+                        user={this.state.user}
+                        logout={this.onSignOut}
                         header={{name: "Family cookbook", to: "/recipes"}}
                         links={[
                             {name: "Recipes", to: "/recipes"},
