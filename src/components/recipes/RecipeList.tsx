@@ -19,7 +19,6 @@ export class RecipeList extends React.Component<RecipeListProps, any> {
     render() {
         return(
             <div>
-                <h1>Recipes</h1>
                 <ul> 
                     {Object.keys(this.props.recipes).map((id) => {
                         const recipe = this.props.recipes[id];

@@ -27,6 +27,7 @@ export class RecipeIndexPage extends React.Component<RouteComponentProps<undefin
         return(
             <Row>
                 <Col sm={12} md={6}>
+                    <h1>Index</h1>
                     <RecipeList recipes={this.state} {...this.props} />
                 </Col>
             </Row>

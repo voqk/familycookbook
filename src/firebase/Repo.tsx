@@ -17,7 +17,7 @@ class Repo {
     }
 
     public getIndex() : firebase.Promise<{[id: string]: RecipeInfoDto}> {
-        return this.firebase.database().ref("/recipeInfos").once('value').then(snapshot => {
+        return this.firebase.database().ref("/index").once('value').then(snapshot => {
             const index = snapshot.val() || {};
             return index;
         });
@@ -31,7 +31,7 @@ class Repo {
         const recipeId = this.firebase.database().ref().child('recipes').push().key;
         const updates: any = {};
         updates[`/recipes/${recipeId}`] = recipeDto;
-        updates[`/recipeInfos/${recipeId}`] = recipeInfoDto;
+        updates[`/index/${recipeId}`] = recipeInfoDto;
 
         return this.firebase.database().ref().update(updates).then(resolve => recipeId);
     }
@@ -41,13 +41,13 @@ class Repo {
         const recipeInfoDto = new RecipeInfoDto(recipe);
         const updates: any = {};
         updates[`/recipes/${recipeId}`] = recipeDto;
-        updates[`/recipeInfos/${recipeId}`] = recipeInfoDto;
+        updates[`/index/${recipeId}`] = recipeInfoDto;
         return this.firebase.database().ref().update(updates).then(resolve => recipeId);
     }
 
     public getRecipe(id: string) : firebase.Promise<Recipe> {
         // todo: move this into a cloud-function
-        return this.firebase.database().ref(`/recipeInfos/${id}`).once('value').then(snapshot => {
+        return this.firebase.database().ref(`/index/${id}`).once('value').then(snapshot => {
             const recipeInfoDto = snapshot.val();
             if(recipeInfoDto) {
                 return this.firebase.database().ref(`/recipes/${id}`).once('value').then(recipeSnapshot => {
@@ -61,7 +61,7 @@ class Repo {
     public deleteRecipe(id: string) {
         const updates: any = {};
         updates[`/recipes/${id}`] = null;
-        updates[`/recipeInfos/${id}`] = null;
+        updates[`/index/${id}`] = null;
 
         return this.firebase.database().ref().update(updates);
     }

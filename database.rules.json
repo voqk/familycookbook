@@ -2,7 +2,7 @@
 // read and write access to your database
 {
   "rules": {
-    "recipeInfos": {
+    "index": {
       ".read": true,
       ".write": "auth !== null"
     },
