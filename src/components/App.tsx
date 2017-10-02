@@ -2,14 +2,15 @@ import * as React from 'react';
 import {
     BrowserRouter as Router,
     Route,
-    Redirect
+    Redirect,
+    RouteComponentProps
 } from 'react-router-dom';
 import { Grid } from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/css/bootstrap-theme.min.css';
 
-import { NavigationBar } from './NavigationBar';
+import  { NavigationBar }  from './NavigationBar';
 import { Home } from './Home';
 import { About } from './About';
 import { Login } from './Login';
@@ -35,23 +36,18 @@ export class App extends React.Component<undefined, AppState> {
         });
     }
 
-    onSignOut() {
-        firebase.auth().signOut();
-    }
-
     render() {
         return(
             <Router>
                 <div>
                     <NavigationBar 
                         user={this.state.user}
-                        logout={this.onSignOut}
                         header={{name: "Family cookbook", to: "/recipes"}}
                         links={[
                             {name: "Recipes", to: "/recipes"},
                             {name: "About", to: "/about"},
-                        ]} />
-
+                        ]} 
+                        {...({} as RouteComponentProps<undefined>)} />
                     <Grid>
                         <Route exact path="/"  render={() => <Redirect to="/recipes" />} />
                         <Route path="/about" component={About} />

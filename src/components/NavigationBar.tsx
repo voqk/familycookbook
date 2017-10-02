@@ -4,6 +4,7 @@ import {
     Nav,
     NavItem,
 } from 'react-bootstrap';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import * as firebase from 'firebase';
 
@@ -12,16 +13,14 @@ interface NavigationBarLink {
     to: string;
 }
 
-interface NavigationBarProps {
+interface NavigationBarProps extends RouteComponentProps<undefined> {
     header: NavigationBarLink;
     links: Array<NavigationBarLink>;
     user?: firebase.User;
-    logout: () => void;
 }
 
-
-
-export class NavigationBar extends React.Component<NavigationBarProps, undefined> {
+export const NavigationBar = withRouter(
+    class NavigationBar extends React.Component<NavigationBarProps, undefined> {
     constructor(props: NavigationBarProps) {
         super(props);
         this.handleLogout = this.handleLogout.bind(this);
@@ -30,7 +29,8 @@ export class NavigationBar extends React.Component<NavigationBarProps, undefined
 
     handleLogout(e: any) {
         e.preventDefault();
-        this.props.logout();
+        firebase.auth().signOut();
+        this.props.history.push(this.props.header.to);
     }
 
     renderUserSection(user: firebase.User) {
@@ -79,4 +79,4 @@ export class NavigationBar extends React.Component<NavigationBarProps, undefined
             </Navbar>
         );
     }
-}
+});
