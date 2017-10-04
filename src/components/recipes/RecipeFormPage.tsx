@@ -15,14 +15,12 @@ import { RecipePretty } from './RecipePretty';
 import { Recipe } from '../../Models';
 import { repo } from '../../firebase/Repo';
 
-interface RecipeFormPageRouteProps {
-    id: string
-}
-
-interface RecipeFormPageProps extends RouteComponentProps<RecipeFormPageRouteProps> { }
+interface RecipeFormPageProps extends RouteComponentProps<{id: string}> {
+    sections: Array<string>
+ }
 
 interface RecipeFormState {
-    instructions: string
+    recipe: Recipe;
 }
 
 export class RecipeFormPage extends React.Component<RecipeFormPageProps, Recipe> {
@@ -109,6 +107,16 @@ export class RecipeFormPage extends React.Component<RecipeFormPageProps, Recipe>
                     <Col xs={12} md={6}>
                         <Panel>
                             <form onSubmit={this.handleSubmit}>
+                                <FormGroup controlId="section">
+                                    <ControlLabel>Section</ControlLabel>
+                                    <FormControl 
+                                        name="section" 
+                                        placeholder="Section"
+                                        value={this.state.name} 
+                                        onChange={this.handleInputChange} 
+                                        required={true}
+                                        type="text" />
+                                </FormGroup>
                                 <FormGroup controlId="name">
                                     <ControlLabel>Name</ControlLabel>
                                     <FormControl 
