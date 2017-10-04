@@ -8,6 +8,7 @@ export class Recipe {
 
     name: string;
     body: string;
+    section: string;
     lastEditTimeStamp: moment.Moment;
 
     constructor(recipeDto: RecipeDto, recipeInfoDto: RecipeInfoDto) {
