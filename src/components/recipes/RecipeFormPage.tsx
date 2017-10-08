@@ -13,7 +13,7 @@ import {
 import * as moment from 'moment';
 
 import { RecipePretty } from './RecipePretty';
-import { Recipe } from '../../Models';
+import { Recipe, Section } from '../../Models';
 import { repo } from '../../firebase/Repo';
 
 interface RecipeFormPageProps extends RouteComponentProps<{id: string}> {
@@ -23,7 +23,7 @@ interface RecipeFormPageProps extends RouteComponentProps<{id: string}> {
 interface RecipeFormState {
     recipe: Recipe;
     sectionFormType: "existing" | "new";
-    sections: {[id: string]: string}
+    sections: {[id: string]: Section}
 }
 
 export class RecipeFormPage extends React.Component<RecipeFormPageProps, RecipeFormState> {
@@ -35,7 +35,10 @@ export class RecipeFormPage extends React.Component<RecipeFormPageProps, RecipeF
             recipe: {
                 name: "",
                 body: "",
-                section: ""
+                section: {
+                    id: "",
+                    name: ""
+                } as Section
             } as Recipe,
             sections: {},
             sectionFormType: "existing"
@@ -44,6 +47,7 @@ export class RecipeFormPage extends React.Component<RecipeFormPageProps, RecipeF
         this.setSectionState = this.setSectionState.bind(this);
         this.orderSections = this.orderSections.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleSectionChange = this.handleSectionChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.fillRecipeFormBasedOnRoute = this.fillRecipeFormBasedOnRoute.bind(this);
     }
@@ -51,14 +55,7 @@ export class RecipeFormPage extends React.Component<RecipeFormPageProps, RecipeF
     componentDidMount() {
         const recipeId = this.props.match.params.id;
         this.fillRecipeFormBasedOnRoute(recipeId);
-        const recipe = {...this.state.recipe};
-        const sections = {"1": "Breakfast", "2": "Lunch"};
-        const s = this.orderSections(sections);
-        recipe.section = this.orderSections(sections)[0];
-        this.setState({
-            recipe: recipe,
-            sections: sections
-        });
+        repo.getSections().then((sections) => { this.setState({sections: sections})})
     } 
 
     componentWillReceiveProps(nextProps: RecipeFormPageProps) {
@@ -66,8 +63,12 @@ export class RecipeFormPage extends React.Component<RecipeFormPageProps, RecipeF
         this.fillRecipeFormBasedOnRoute(recipeId);
     }
 
-    orderSections(sections: {[id: string]: string}) {
-        return Object.keys(sections).sort().map(key => sections[key]);
+    orderSections(sections: {[id: string]: Section}) {
+        return Object.keys(sections).map(key => sections[key]).sort((sec1, sec2) => {
+            if(sec1.name < sec2.name) { return -1 }
+            if(sec1.name > sec2.name) { return 1 }
+            return 0;
+        });
     }
 
     fillRecipeFormBasedOnRoute(recipeId: string) {
@@ -79,7 +80,10 @@ export class RecipeFormPage extends React.Component<RecipeFormPageProps, RecipeF
             const emptyRecipe = {
                 name: "",
                 body: "",
-                section: this.orderSections(this.state.sections)[0],
+                section: {
+                    id: "",
+                    name: ""
+                } as Section,
                 lastEditTimeStamp: undefined
             } as Recipe;
             this.setState({recipe: emptyRecipe});
@@ -96,7 +100,11 @@ export class RecipeFormPage extends React.Component<RecipeFormPageProps, RecipeF
                 break;
             }
             case "new": {
-                recipe.section = "";
+                const newSection = {
+                    id: "",
+                    name: ""
+                } as Section;
+                recipe.section = newSection;
                 break;
             }
         }
@@ -113,6 +121,23 @@ export class RecipeFormPage extends React.Component<RecipeFormPageProps, RecipeF
         const recipe = {...this.state.recipe} as any;
         recipe[name] = value;
         this.setState({ recipe: recipe });
+    }
+
+    handleSectionChange(event: any) {
+        const recipe = {...this.state.recipe};
+        switch(this.state.sectionFormType) {
+            case "new": {
+                const newSectionName = event.target.value;
+                recipe.section.name = newSectionName;
+                break;
+            }
+            case "existing": {
+                const sectionId = event.target.value;
+                recipe.section = this.state.sections[sectionId];
+                break;
+            }
+        }
+        this.setState({recipe: recipe});
     }
 
     handleSubmit(event: any) {
@@ -139,21 +164,22 @@ export class RecipeFormPage extends React.Component<RecipeFormPageProps, RecipeF
                         <FormControl 
                             componentClass="select"
                             name="section" 
-                            onChange={this.handleInputChange} 
+                            onChange={this.handleSectionChange} 
                             required={true}
+                            value={this.state.recipe.section.id}
                             type="text">
                             {Object.keys(this.state.sections)
                                 .sort()
                                 .map((key) => {
                                     const section = this.state.sections[key];
                                     return(
-                                        <option key={key} value={section}>{section}</option>
+                                        <option key={key} value={section.id}>{section.name}</option>
                                     );
                                 })}
                         </FormControl>
                         <InputGroup.Button>
                             <Button 
-                                bsStyle="success"
+                                bsStyle="primary"
                                 onClick={() => this.setSectionState("new")} >
                                 Existing section
                             </Button>
@@ -166,15 +192,15 @@ export class RecipeFormPage extends React.Component<RecipeFormPageProps, RecipeF
                     <InputGroup>
                         <FormControl 
                             name="section" 
-                            value={this.state.recipe.section} 
-                            onChange={this.handleInputChange} 
+                            value={this.state.recipe.section.name} 
+                            onChange={this.handleSectionChange} 
                             placeholder={"New section name"}
                             required={true}
                             type="text">
                         </FormControl>
                         <InputGroup.Button>
                             <Button
-                                bsStyle="primary"
+                                bsStyle="success"
                                 onClick={() => this.setSectionState("existing")} >
                                 New section
                             </Button>

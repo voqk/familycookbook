@@ -3,7 +3,8 @@ import * as moment from 'moment';
 import { 
     RecipeDto, 
     RecipeInfoDto,
-    Recipe
+    Recipe,
+    Section
 } from '../Models';
 
 import firebase from './firebase';
@@ -23,13 +24,27 @@ class Repo {
         });
     }
 
+    public getSections(): firebase.Promise<{[id: string]: Section}> {
+        return this.firebase.database().ref("/sections").once('value').then(snapshot => {
+            const sections = snapshot.val() || {};
+            return sections;
+        })
+    }
+
     public createRecipe(recipe: Recipe) {
+        const updates: any = {};
+
+        if(!recipe.section.id) {
+            const sectionId = this.firebase.database().ref().child('sections').push().key;
+            recipe.section.id = sectionId;
+            updates[`/sections/${sectionId}`] = recipe.section;
+        }
+
         // convert to DTOs
         const recipeDto = new RecipeDto(recipe);
         const recipeInfoDto = new RecipeInfoDto(recipe);
 
         const recipeId = this.firebase.database().ref().child('recipes').push().key;
-        const updates: any = {};
         updates[`/recipes/${recipeId}`] = recipeDto;
         updates[`/index/${recipeId}`] = recipeInfoDto;
 
@@ -37,9 +52,14 @@ class Repo {
     }
 
     public updateRecipe(recipeId: string, recipe: Recipe) {
+        const updates: any = {};
+        if(!recipe.section.id) {
+            const sectionId = this.firebase.database().ref().child('sections').push().key;
+            recipe.section.id = sectionId;
+            updates[`/sections/${sectionId}`] = recipe.section;
+        }
         const recipeDto = new RecipeDto(recipe);
         const recipeInfoDto = new RecipeInfoDto(recipe);
-        const updates: any = {};
         updates[`/recipes/${recipeId}`] = recipeDto;
         updates[`/index/${recipeId}`] = recipeInfoDto;
         return this.firebase.database().ref().update(updates).then(resolve => recipeId);

@@ -9,6 +9,10 @@
     "recipes": {
       ".read": true,
       ".write": "auth !== null"
+    },
+    "sections": {
+      ".read": true,
+      ".write": "auth !== null"
     }
   }
 }
